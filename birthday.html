@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Happy Birthday 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@1,300;1,700&family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root { --pink:#ee9ca7; --cream:#fefae9; --choco:#8b6a60; }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:24px 16px;
+    min-height:100dvh;
+    background:linear-gradient(180deg,var(--pink) 0%, #ffd1dc 100%);
+    display:flex; align-items:flex-start; justify-content:center; font-family:"Kanit",system-ui,sans-serif;
+  }
+  .card{
+    width:min(900px,92vw); background:#fff; border-radius:24px; padding:24px;
+    box-shadow:0 10px 40px rgba(0,0,0,.15); position:relative; overflow:hidden;
+  }
+  .title{text-align:center}
+  .title h1{margin:0;color:#ff5fa2;font-size:clamp(28px,5vw,40px)}
+  .title h2{margin:2px 0 0;color:var(--choco);font-size:clamp(18px,3.2vw,22px)}
+  .cake-wrap{display:flex;justify-content:center;align-items:center;margin:6px 0 0}
+  /* เทียน */
+  .velas{
+    background:#fff;border-radius:10px;position:absolute;top:228px;left:50%;
+    width:5px;height:35px;margin-left:-2.4px;transform:translateY(-300px);
+    animation: in 500ms 1s ease-out forwards;
+  }
+  .fuego{position:absolute;top:-20px;left:50%;width:6.6px;height:18px;margin-left:-2.6px;border-radius:50%;
+    animation:fuego 1.2s 2.2s infinite}
+  @keyframes in{to{transform:translateY(0)}}
+  @keyframes fuego{
+    0%,100%{background:rgba(254,248,97,.6);transform:translateY(0) scale(1)}
+    50%{background:rgba(255,50,0,.35);transform:translateY(-18px) scale(0)}
+  }
+  /* วิดีโอ */
+  .gallery{margin:16px 0 6px}
+  .video-frame{
+    position:relative;
+    width:100%; max-width:560px; margin:0 auto;
+    aspect-ratio:3/4;
+    border-radius:16px; overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,.18); background:#000;
+  }
+  .video-frame video{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* ปุ่มเปิดเสียง (โผล่เฉพาะเมื่อ autoplay ถูกบล็อก) */
+  .sound-btn{
+    position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
+    background:#ff5fa2; color:#fff; border:none; border-radius:999px;
+    padding:10px 16px; font-family:"Kanit", system-ui, sans-serif; font-size:15px;
+    box-shadow:0 8px 18px rgba(0,0,0,.25); cursor:pointer; display:none;
+  }
+  .sound-btn:active{ transform:translateX(-50%) scale(.98); }
+
+  /* ข้อความอวยพร */
+  .wish{margin:14px 0 10px; text-align:center; color:#333; line-height:1.75; font-size:clamp(15px,2.4vw,18px)}
+  footer{margin-top:8px;text-align:center;color:#6a4f48;font-family:"Lato",sans-serif;font-style:italic}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="title">
+      <h1>Happy Birthday! 🎂</h1>
+      <h2>สุขสันต์วันเกิดนะครับ</h2>
+    </div>
+
+    <!-- เค้ก -->
+    <div class="cake-wrap">
+      <div class="velas"><div class="fuego"></div></div>
+      <svg id="cake" width="210" height="180" viewBox="0 0 200 200" aria-hidden="true">
+        <ellipse cx="100" cy="150" rx="80" ry="30" fill="#a88679"/>
+        <rect x="20" y="70" width="160" height="80" fill="#fefae9"/>
+        <ellipse cx="100" cy="70" rx="80" ry="30" fill="#a88679"/>
+      </svg>
+    </div>
+
+    <!-- ข้อความอวยพร -->
+    <p class="wish">
+      เธอยังน่ารักเหมือนเดิมไม่เปลี่ยน ❤️<br>
+      ขอให้ปีนี้เป็นปีที่เต็มไปด้วยความสุข สิ่งดีๆ และขอให้เธอมีสุขภาพแข็งแรง<br>
+      ขอให้เค้ายังได้อยู่ข้างๆเธอทุกวันเกิดต่อจากนี้ไป<br>
+      เพราะสำหรับเค้า แค่ได้อยู่กับเธอ ก็คือของขวัญที่ดีที่สุดแล้ว
+    </p>
+
+    <div class="gallery">
+      <div class="video-frame">
+        <video id="vid" src="6.mp4" autoplay loop muted playsinline preload="metadata" poster=""></video>
+
+        <audio id="bg-music" autoplay loop preload="auto">
+          <source src="0.mp3" type="audio/mpeg">
+        </audio>
+
+        <button id="soundBtn" class="sound-btn">🎵 แตะเพื่อเปิดเสียง</button>
+      </div>
+    </div>
+
+    <footer>My Jinny ❤️</footer>
+  </div>
+
+<script>
+  (function(){
+    const music = document.getElementById('bg-music');
+    const video = document.getElementById('vid');
+    const btn   = document.getElementById('soundBtn');
+    const startTime = 36; // วินาทีที่ต้องการเริ่มเล่น (0:36)
+
+    const tryPlay = async () => {
+      try {
+        if (video && video.paused) { await video.play().catch(()=>{}); }
+
+        music.currentTime = startTime;
+
+        await music.play();
+        if (btn) btn.style.display = 'none';
+      } catch(e) {
+        if (btn) btn.style.display = 'inline-block';
+      }
+    };
+
+    window.addEventListener('load', tryPlay);
+
+    btn.addEventListener('click', async () => {
+      try {
+        if (video && video.paused) { await video.play().catch(()=>{}); }
+
+        music.currentTime = startTime;
+
+        await music.play();
+        btn.style.display = 'none';
+      } catch (e) {
+        console.warn('Autoplay blocked:', e);
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        try {
+          music.currentTime = startTime;
+          tryPlay();
+        } catch(e){}
+      }
+    });
+  })();
+</script>
